@@ -16,6 +16,7 @@ import {
   projectsToListsForCurrentUserSelector,
   tasksForCurrentCardSelector,
   usersForCurrentCardSelector,
+  currentUserSelector,
 } from '../selectors';
 import {
   addLabelToCurrentCard,
@@ -51,6 +52,7 @@ const mapStateToProps = (state) => {
   const allBoardMemberships = membershipsForCurrentBoardSelector(state);
   const allLabels = labelsForCurrentBoardSelector(state);
   const isCurrentUserMember = isCurrentUserMemberForCurrentBoardSelector(state);
+  const currentUser = currentUserSelector(state);
 
   const {
     name,
@@ -91,6 +93,7 @@ const mapStateToProps = (state) => {
     allLabels,
     canEdit: isCurrentUserMember,
     canEditAllCommentActions: isCurrentUserManager,
+    isAdmin: currentUser.isAdmin,
   };
 };
 

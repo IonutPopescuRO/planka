@@ -58,6 +58,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: embedLocales,
+    lng: 'en',
     fallbackLng: false,
     whitelist: languages,
     load: 'currentOnly',

@@ -70,6 +70,7 @@ const CardModal = React.memo(
     onCommentActionUpdate,
     onCommentActionDelete,
     onClose,
+    isAdmin,
   }) => {
     const [t] = useTranslation();
 
@@ -196,7 +197,7 @@ const CardModal = React.memo(
                     </div>
                     {labels.map((label) => (
                       <span key={label.id} className={styles.attachment}>
-                        {canEdit ? (
+                        {isAdmin ? (
                           <LabelsPopup
                             key={label.id}
                             items={allLabels}
@@ -214,7 +215,7 @@ const CardModal = React.memo(
                         )}
                       </span>
                     ))}
-                    {canEdit && (
+                    {isAdmin && (
                       <LabelsPopup
                         items={allLabels}
                         currentIds={labelIds}
@@ -242,7 +243,7 @@ const CardModal = React.memo(
                       })}
                     </div>
                     <span className={styles.attachment}>
-                      {canEdit ? (
+                      {isAdmin ? (
                         <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
                           <DueDate value={dueDate} />
                         </DueDateEditPopup>
@@ -261,7 +262,11 @@ const CardModal = React.memo(
                     </div>
                     <span className={styles.attachment}>
                       {canEdit ? (
-                        <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
+                        <TimerEditPopup
+                          defaultValue={timer}
+                          onUpdate={handleTimerUpdate}
+                          canEditTimer={isAdmin}
+                        >
                           <Timer startedAt={timer.startedAt} total={timer.total} />
                         </TimerEditPopup>
                       ) : (
@@ -359,29 +364,37 @@ const CardModal = React.memo(
                     {t('common.members')}
                   </Button>
                 </BoardMembershipsPopup>
-                <LabelsPopup
-                  items={allLabels}
-                  currentIds={labelIds}
-                  onSelect={onLabelAdd}
-                  onDeselect={onLabelRemove}
-                  onCreate={onLabelCreate}
-                  onUpdate={onLabelUpdate}
-                  onDelete={onLabelDelete}
+                {isAdmin && (
+                  <LabelsPopup
+                    items={allLabels}
+                    currentIds={labelIds}
+                    onSelect={onLabelAdd}
+                    onDeselect={onLabelRemove}
+                    onCreate={onLabelCreate}
+                    onUpdate={onLabelUpdate}
+                    onDelete={onLabelDelete}
+                  >
+                    <Button fluid className={styles.actionButton}>
+                      <Icon name="bookmark outline" className={styles.actionIcon} />
+                      {t('common.labels')}
+                    </Button>
+                  </LabelsPopup>
+                )}
+                {isAdmin && (
+                  <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
+                    <Button fluid className={styles.actionButton}>
+                      <Icon name="calendar check outline" className={styles.actionIcon} />
+                      {t('common.dueDate', {
+                        context: 'title',
+                      })}
+                    </Button>
+                  </DueDateEditPopup>
+                )}
+                <TimerEditPopup
+                  defaultValue={timer}
+                  onUpdate={handleTimerUpdate}
+                  canEditTimer={isAdmin}
                 >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="bookmark outline" className={styles.actionIcon} />
-                    {t('common.labels')}
-                  </Button>
-                </LabelsPopup>
-                <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="calendar check outline" className={styles.actionIcon} />
-                    {t('common.dueDate', {
-                      context: 'title',
-                    })}
-                  </Button>
-                </DueDateEditPopup>
-                <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
                   <Button fluid className={styles.actionButton}>
                     <Icon name="clock outline" className={styles.actionIcon} />
                     {t('common.timer')}
@@ -502,6 +515,7 @@ CardModal.propTypes = {
   onCommentActionUpdate: PropTypes.func.isRequired,
   onCommentActionDelete: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 CardModal.defaultProps = {

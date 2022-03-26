@@ -29,7 +29,7 @@ const createData = (timer) => {
   };
 };
 
-const TimerEditStep = React.memo(({ defaultValue, onUpdate, onBack, onClose }) => {
+const TimerEditStep = React.memo(({ defaultValue, onUpdate, onBack, onClose, canEditTimer }) => {
   const [t] = useTranslation();
   const [data, handleFieldChange, setData] = useForm(() => createData(defaultValue));
   const [isEditing, toggleEdit] = useToggle();
@@ -145,12 +145,14 @@ const TimerEditStep = React.memo(({ defaultValue, onUpdate, onBack, onClose }) =
                 onChange={handleFieldChange}
               />
             </div>
-            <Button
-              type="button"
-              icon={isEditing ? 'close' : 'edit'}
-              className={styles.iconButton}
-              onClick={handleToggleEditClick}
-            />
+            {canEditTimer && (
+              <Button
+                type="button"
+                icon={isEditing ? 'close' : 'edit'}
+                className={styles.iconButton}
+                onClick={handleToggleEditClick}
+              />
+            )}
           </div>
           {isEditing && <Button positive content={t('action.save')} />}
         </Form>
@@ -176,11 +178,13 @@ TimerEditStep.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onBack: PropTypes.func,
   onClose: PropTypes.func.isRequired,
+  canEditTimer: PropTypes.bool,
 };
 
 TimerEditStep.defaultProps = {
   defaultValue: undefined,
   onBack: undefined,
+  canEditTimer: false,
 };
 
 export default TimerEditStep;
